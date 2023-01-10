@@ -5,9 +5,7 @@ const uuid = require('../helpers/uuid');
 
 notes.get('/', async(req, res) => {
     let data= fs.readFileSync(`db/db.json`, "utf8")
-    console.log("line 8", data)
     data=JSON.parse(data)
-    console.log("line 10", data)
     res.json(data)
 
     // Log our request to the terminal
@@ -34,7 +32,6 @@ notes.post('/', (req, res) => {
       fs.readFile(`db/db.json`, "utf8", (err,data)=>{
         const fileData=JSON.parse(data);
         fileData.push(newNote);
-        console.log(fileData)
         // Write the string to a file
         fs.writeFile(`db/db.json`,JSON.stringify(fileData, null, 4), (err) =>
         err

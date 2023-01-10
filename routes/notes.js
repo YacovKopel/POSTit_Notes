@@ -1,11 +1,14 @@
 const notes = require('express').Router();
+const { json } = require('express');
 const fs = require('fs');
 const uuid = require('../helpers/uuid');
 
 notes.get('/', async(req, res) => {
-    const data= fs.readFileSync(`db/db.json`, "utf-8")
-    console.log(data)
-    res.json(JSON.parse(data))
+    let data= fs.readFileSync(`db/db.json`, "utf8")
+    console.log("line 8", data)
+    data=JSON.parse(data)
+    console.log("line 10", data)
+    res.json(data)
 
     // Log our request to the terminal
     console.info(`${req.method} request received to get reviews`);
@@ -25,21 +28,22 @@ notes.post('/', (req, res) => {
       const newNote = {
         title,
         text,
-        note_id: uuid(),
+        id: uuid(),
       };
 
-      fs.readFile(`db/db.json`, "utf-8", (err,data)=>{
+      fs.readFile(`db/db.json`, "utf8", (err,data)=>{
         const fileData=JSON.parse(data);
         fileData.push(newNote);
+        console.log(fileData)
         // Write the string to a file
         fs.writeFile(`db/db.json`,JSON.stringify(fileData, null, 4), (err) =>
         err
           ? console.error(err)
           : console.log(
-              `Review for ${newNote.product} has been written to JSON file`
+              `Review for ${newNote.title} has been written to JSON file`
             )
       );
-      })
+     
   
       const response = {
         status: 'success',
@@ -48,6 +52,7 @@ notes.post('/', (req, res) => {
   
       console.log(response);
       res.status(201).json(response);
+    })
     } else {
       res.status(500).json('Error in posting review');
     }
